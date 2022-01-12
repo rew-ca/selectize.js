@@ -1,6 +1,6 @@
-@import "../../node_modules/bootstrap4/scss/functions";
-@import "../../node_modules/bootstrap4/scss/variables";
-@import "../../node_modules/bootstrap4/scss/mixins";
+@import "../../vendor/bootstrap4/functions";
+@import "../../vendor/bootstrap4/variables";
+@import "../../vendor/bootstrap4/mixins";
 
 $enable-shadows: true !default;
 $select-font-family: inherit !default;
@@ -97,6 +97,10 @@ $select-arrow-offset: calc(#{$select-padding-x} + 5px) !default;
 
 .#{$selectize}-dropdown-content {
   padding: 5px 0;
+}
+
+.#{$selectize}-dropdown-emptyoptionlabel {
+	text-align: center;
 }
 
 .#{$selectize}-input {
