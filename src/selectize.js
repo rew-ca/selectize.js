@@ -202,8 +202,8 @@ $.extend(Selectize.prototype, {
 		$control_input.on({
 			mousedown : function(e) { e.stopPropagation(); },
 			keydown   : function() { return self.onKeyDown.apply(self, arguments); },
-			keyup     : function() { return self.onKeyUp.apply(self, arguments); },
 			keypress  : function() { return self.onKeyPress.apply(self, arguments); },
+			input     : function() { return self.onInput.apply(self, arguments); },
 			resize    : function() { self.positionDropdown.apply(self, []); },
 			blur      : function() { return self.onBlur.apply(self, arguments); },
 			focus     : function() { self.ignoreBlur = false; return self.onFocus.apply(self, arguments); },
@@ -253,7 +253,7 @@ $.extend(Selectize.prototype, {
 
 		$input.attr('tabindex', -1).hide().after(self.$wrapper);
 
-		if ($.isArray(settings.items)) {
+		if (Array.isArray(settings.items)) {
 			self.lastValidValue = settings.items;
 			self.setValue(settings.items);
 			delete settings.items;
@@ -448,7 +448,9 @@ $.extend(Selectize.prototype, {
 				var pastedText = self.$control_input.val();
 				if(!pastedText.match(self.settings.splitOn)){ return }
 
-				var splitInput = $.trim(pastedText).split(self.settings.splitOn);
+				var splitInput = pastedText
+					.trim()
+					.split(self.settings.splitOn);
 				for (var i = 0, n = splitInput.length; i < n; i++) {
 					self.createItem(splitInput[i]);
 				}
@@ -564,15 +566,14 @@ $.extend(Selectize.prototype, {
 	},
 
 	/**
-	 * Triggered on <input> keyup.
+	 * Triggered on <input> input.
 	 *
 	 * @param {object} e
 	 * @returns {boolean}
 	 */
-	onKeyUp: function(e) {
+	onInput: function(e) {
 		var self = this;
 
-		if (self.isLocked) return e && e.preventDefault();
 		var value = self.$control_input.val() || '';
 		if (self.lastValue !== value) {
 			self.lastValue = value;
@@ -1103,7 +1104,7 @@ $.extend(Selectize.prototype, {
 		}
 
 		var self              = this;
-		var query             = $.trim(self.$control_input.val());
+		var query             = (self.$control_input.val()).trim();
 		var results           = self.search(query);
 		var $dropdown_content = self.$dropdown_content;
 		var active_before     = self.$activeOption && hash_key(self.$activeOption.attr('data-value'));
@@ -1122,7 +1123,7 @@ $.extend(Selectize.prototype, {
 			option      = self.options[results.items[i].id];
 			option_html = self.render('option', option);
 			optgroup    = option[self.settings.optgroupField] || '';
-			optgroups   = $.isArray(optgroup) ? optgroup : [optgroup];
+			optgroups   = Array.isArray(optgroup) ? optgroup : [optgroup];
 
 			for (j = 0, k = optgroups && optgroups.length; j < k; j++) {
 				optgroup = optgroups[j];
@@ -1240,7 +1241,7 @@ $.extend(Selectize.prototype, {
 	addOption: function(data) {
 		var i, n, value, self = this;
 
-		if ($.isArray(data)) {
+		if (Array.isArray(data)) {
 			for (i = 0, n = data.length; i < n; i++) {
 				self.addOption(data[i]);
 			}
@@ -1554,7 +1555,7 @@ $.extend(Selectize.prototype, {
 			this.buffer.appendChild(childNodes[i]);
 		}
 
-		var items = $.isArray(values) ? values : [values];
+		var items = Array.isArray(values) ? values : [values];
 		for (var i = 0, n = items.length; i < n; i++) {
 			this.isPending = (i < n - 1);
 			this.addItem(items[i], silent);
@@ -1686,7 +1687,7 @@ $.extend(Selectize.prototype, {
 	createItem: function(input, triggerDropdown) {
 		var self  = this;
 		var caret = self.caretPos;
-		input = input || $.trim(self.$control_input.val() || '');
+		input = input || (self.$control_input.val() || '').trim();
 
 		var callback = arguments[arguments.length - 1];
 		if (typeof callback !== 'function') callback = function() {};
